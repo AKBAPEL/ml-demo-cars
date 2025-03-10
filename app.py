@@ -12,6 +12,7 @@ from sklearn.linear_model import LinearRegression, Ridge, Lasso
 from sklearn.preprocessing import StandardScaler
 from sklearn.pipeline import Pipeline
 import joblib
+import re
 
 app = FastAPI()
 
@@ -19,12 +20,8 @@ class modelRegressor():
     def __init__(self):
       self.pipe = Pipeline([('scaler', StandardScaler()),
                       ('Regressor', Ridge(alpha=2))])
-    def fit(self,X_f,y_f):
-      self.pipe.fit(X_f,y_f)
-    def data_transform(self,df):
-      df['name'] = df['name'].apply(lambda x: x.split()[0])
-      base_cols = ['year', 'km_driven', 'mileage', 'engine', 'max_power', 'torque',
-       'selling_price', 'max_torque_rpm', 'name_Audi', 'name_BMW',
+      self.base_cols = ['year', 'km_driven', 'mileage', 'engine', 'max_power', 'torque',
+        'max_torque_rpm', 'name_Audi', 'name_BMW',
        'name_Chevrolet', 'name_Daewoo', 'name_Datsun', 'name_Fiat',
        'name_Force', 'name_Ford', 'name_Honda', 'name_Hyundai', 'name_Isuzu',
        'name_Jaguar', 'name_Jeep', 'name_Kia', 'name_Land', 'name_Lexus',
@@ -37,9 +34,33 @@ class modelRegressor():
        'owner_Second Owner', 'owner_Test Drive Car', 'owner_Third Owner',
        'seats_4', 'seats_5', 'seats_6', 'seats_7', 'seats_8', 'seats_9',
        'seats_10', 'seats_14']
+      self.pro_cols = ['year', 'km_driven', 'mileage', 'engine', 'max_power', 'torque',
+       'max_torque_rpm', 'name_Audi', 'name_BMW', 'name_Chevrolet',
+       'name_Daewoo', 'name_Datsun', 'name_Fiat', 'name_Force', 'name_Ford',
+       'name_Honda', 'name_Hyundai', 'name_Isuzu', 'name_Jaguar', 'name_Jeep',
+       'name_Kia', 'name_Land', 'name_Lexus', 'name_MG', 'name_Mahindra',
+       'name_Maruti', 'name_Mercedes-Benz', 'name_Mitsubishi', 'name_Nissan',
+       'name_Peugeot', 'name_Renault', 'name_Skoda', 'name_Tata',
+       'name_Toyota', 'name_Volkswagen', 'name_Volvo', 'fuel_Diesel',
+       'fuel_LPG', 'fuel_Petrol', 'seller_type_Individual',
+       'seller_type_Trustmark Dealer', 'transmission_Manual',
+       'owner_Fourth & Above Owner', 'owner_Second Owner',
+       'owner_Test Drive Car', 'owner_Third Owner', 'seats_4', 'seats_5',
+       'seats_6', 'seats_7', 'seats_8', 'seats_9', 'seats_10', 'seats_14',
+       'new1', 'new111', 'new1.1', 'new2', 'new3', 'new3.1', 'new3.2', 'new4',
+       'new5', 'new6', 'new10', 'new11', 'new12', 'new13', 'premium', 'cheap',
+       'more_owner', 'brand_new', 'new3.3', 'new3.4', 'new112']
+
+    def fit(self,Xs,ys):
+      self.pipe.fit(Xs,ys)
+
+
+    def data_transform(self,df):
+      df['name'] = df['name'].apply(lambda x: x.split()[0])
+
       enc = pd.get_dummies(df, columns=df.select_dtypes(include=['object']).columns, drop_first=True, dtype = int)
       enc = pd.get_dummies(enc, columns=['seats'], drop_first=True, dtype = int)
-      enc = enc.reindex(columns = base_cols, fill_value=0)
+      enc = enc.reindex(columns = self.base_cols, fill_value=0)
       return enc
     
     def new_features(self,df):
@@ -78,13 +99,13 @@ class modelRegressor():
         return df
 
     def predict(self,X_pred):
-      t = self.new_features(self.data_transform(X_pred)).reindex(columns = X_f.columns, fill_value=0)
+      t = self.new_features(self.data_transform(X_pred).reindex(columns = self.base_cols, fill_value=0)).reindex(columns = self.pro_cols, fill_value=0)
       print(t.columns)
-      y_pred = pipe.predict(t)
+      y_pred = self.pipe.predict(t)
       return y_pred
 
 mod = modelRegressor()
-mod = joblib.load(open('filename2.pkl', 'rb')) 
+mod = joblib.load(open('filename3.pkl', 'rb')) 
     
 class Item(BaseModel):
     name: str
