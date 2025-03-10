@@ -13,8 +13,8 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.pipeline import Pipeline
 import joblib
 import re
+from os.path import dirname, join, realpath
 
-app = FastAPI()
 
 class modelRegressor():
     def __init__(self):
@@ -104,9 +104,13 @@ class modelRegressor():
       y_pred = self.pipe.predict(t)
       return y_pred
 
-mod = modelRegressor()
-mod = joblib.load(open('filename3.pkl', 'rb')) 
-    
+mod =  modelRegressor()
+with open(
+    join(dirname(realpath(__file__)), "filename3.pkl"), "rb"
+) as f:
+    mod = joblib.load(f)
+
+app = FastAPI()
 class Item(BaseModel):
     name: str
     year: int
