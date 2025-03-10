@@ -104,13 +104,7 @@ class modelRegressor():
       y_pred = self.pipe.predict(t)
       return y_pred
 
-mod =  modelRegressor()
-with open(
-    join(dirname(realpath(__file__)), "filename3.pkl"), "rb"
-) as f:
-    mod = joblib.load(f)
 
-app = FastAPI()
 class Item(BaseModel):
     name: str
     year: int
@@ -139,3 +133,9 @@ def predict_item(item: Item) -> float:
 @app.post("/predict_items")
 def predict_items(items: List[Item]) -> List[float]:
     return mod.predict(items)
+
+
+if __name__ == '__main__':
+    mod = joblib.load("filename3.pkl")
+
+    app = FastAPI()
