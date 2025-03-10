@@ -11,7 +11,7 @@ from sklearn.metrics import mean_squared_error
 from sklearn.linear_model import LinearRegression, Ridge, Lasso
 from sklearn.preprocessing import StandardScaler
 from sklearn.pipeline import Pipeline
-import joblib
+import pickle
 import re
 from os.path import dirname, join, realpath
 
@@ -104,7 +104,11 @@ class modelRegressor():
       y_pred = self.pipe.predict(t)
       return y_pred
 
+#mod =  modelRegressor()
+with open("pipeline.pkl", 'rb') as f:
+    mod = pickle.load(f)
 
+app = FastAPI()
 class Item(BaseModel):
     name: str
     year: int
@@ -133,9 +137,3 @@ def predict_item(item: Item) -> float:
 @app.post("/predict_items")
 def predict_items(items: List[Item]) -> List[float]:
     return mod.predict(items)
-
-
-if __name__ == '__main__':
-    mod = joblib.load("filename3.pkl")
-
-    app = FastAPI()
