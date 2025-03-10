@@ -83,7 +83,7 @@ class modelRegressor():
       y_pred = pipe.predict(t)
       return y_pred
 
-
+mod = modelRegressor()
 mod = joblib.load(open('filename2.pkl', 'rb')) 
     
 class Item(BaseModel):
