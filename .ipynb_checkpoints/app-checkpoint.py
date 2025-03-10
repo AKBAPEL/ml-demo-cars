@@ -130,9 +130,9 @@ class Items(BaseModel):
 
 @app.post("/predict_item")
 def predict_item(item: Item) -> float:
-    return  mod.predict(items)[0]
+    return  mod.predict(pd.DataFrame(items))[0]
 
 
 @app.post("/predict_items")
 def predict_items(items: List[Item]) -> List[float]:
-    return mod.predict(items)
+    return mod.predict(pd.DataFrame(items))
