@@ -7,4 +7,3 @@ scikit-learn
 scipy
 pydantic
 typing
-pickle
