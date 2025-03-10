@@ -1,2 +1,9 @@
 fastapi
 uvicorn
+pandas
+numpy
+joblib
+scikit-learn
+scipy
+pydantic
+typing
