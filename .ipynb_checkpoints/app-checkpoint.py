@@ -14,7 +14,7 @@ from sklearn.pipeline import Pipeline
 import pickle
 import re
 from os.path import dirname, join, realpath
-class modelRegressor1():
+class modelRegressor():
     def __init__(self):
       self.pipe = Pipeline([('scaler', StandardScaler()),
                       ('Regressor', Ridge(alpha=2))])
@@ -104,8 +104,9 @@ class modelRegressor1():
 
 
 
-with open("pipeline.pkl", 'rb') as f:
-    mod = pickle.load(f)
+with open("weights.pkl", 'rb') as f:
+    mod = modelRegressor()
+    mod.pipe = pickle.load(f)
 
 app = FastAPI()
 class Item(BaseModel):
@@ -136,4 +137,3 @@ def predict_item(item: Item) -> float:
 @app.post("/predict_items")
 def predict_items(items: List[Item]) -> List[float]:
     return mod.predict(items)
-
