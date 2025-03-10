@@ -98,7 +98,6 @@ class modelRegressor():
 
     def predict(self,X_pred):
       t = self.new_features(self.data_transform(X_pred).reindex(columns = self.base_cols, fill_value=0)).reindex(columns = self.pro_cols, fill_value=0)
-      print(t.columns)
       y_pred = self.pipe.predict(t)
       return y_pred
 
@@ -112,17 +111,17 @@ app = FastAPI()
 class Item(BaseModel):
     name: str
     year: int
-    selling_price: int
     km_driven: int
     fuel: str
     seller_type: str
     transmission: str
     owner: str
-    mileage: str
-    engine: str
-    max_power: str
-    torque: str
-    seats: float
+    mileage: float
+    engine: int
+    max_power: float
+    torque: float
+    seats: int 
+    max_torque_rpm: float
 
 
 class Items(BaseModel):
