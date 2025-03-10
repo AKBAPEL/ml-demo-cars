@@ -16,10 +16,11 @@ import joblib
 app = FastAPI()
 
 class modelRegressor():
-    def __init__(self,X_f,y_f):
-      pipe = Pipeline([('scaler', StandardScaler()),
+    def __init__(self):
+      self.pipe = Pipeline([('scaler', StandardScaler()),
                       ('Regressor', Ridge(alpha=2))])
-      pipe.fit(X_f,y_f)
+    def fit(self,X_f,y_f):
+      self.pipe.fit(X_f,y_f)
     def data_transform(self,df):
       df['name'] = df['name'].apply(lambda x: x.split()[0])
       base_cols = ['year', 'km_driven', 'mileage', 'engine', 'max_power', 'torque',
@@ -83,7 +84,7 @@ class modelRegressor():
       return y_pred
 
 
-mod = joblib.load(open('filename1.pkl', 'rb')) 
+mod = joblib.load(open('filename2.pkl', 'rb')) 
     
 class Item(BaseModel):
     name: str
